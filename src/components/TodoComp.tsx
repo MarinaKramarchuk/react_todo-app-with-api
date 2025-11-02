@@ -26,6 +26,15 @@ export const TodoComp: React.FC<Props> = ({
 }) => {
   const isCompleted = todo?.completed ?? false;
 
+  const handleExitFormField = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ): void => {
+    if (event.key === 'Escape') {
+      onSetIsEditing(null);
+      onSetQuery(todo.title);
+    }
+  };
+
   return (
     <div data-cy="Todo" className={cn('todo', { completed: isCompleted })}>
       <label
@@ -77,12 +86,7 @@ export const TodoComp: React.FC<Props> = ({
             value={query}
             onChange={event => onSetQuery(event.target.value.trimStart())}
             onBlur={() => onUpdateTodo(todo.id, query)}
-            onKeyUp={event => {
-              if (event.key === 'Escape') {
-                onSetIsEditing(null);
-                onSetQuery(todo.title);
-              }
-            }}
+            onKeyUp={handleExitFormField}
             autoFocus
           />
         </form>

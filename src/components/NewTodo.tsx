@@ -35,6 +35,9 @@ export const NewTodo: React.FC<Props> = ({ onSetError, onAddTodo }) => {
     }
   };
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void =>
+    setTitle(event.target.value.trimStart());
+
   return (
     <form onSubmit={handleSubmit}>
       <input
@@ -45,7 +48,7 @@ export const NewTodo: React.FC<Props> = ({ onSetError, onAddTodo }) => {
         placeholder="What needs to be done?"
         value={title}
         disabled={isDisabled}
-        onChange={event => setTitle(event.target.value.trimStart())}
+        onChange={handleChange}
       />
     </form>
   );
