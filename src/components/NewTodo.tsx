@@ -1,20 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 type Props = {
   onSetError: (arg: string) => void;
   onAddTodo: (title: string) => void;
+  inputRef: React.RefObject<HTMLInputElement>;
 };
 
-export const NewTodo: React.FC<Props> = ({ onSetError, onAddTodo }) => {
+export const NewTodo: React.FC<Props> = ({
+  onSetError,
+  onAddTodo,
+  inputRef,
+}) => {
   const [title, setTitle] = useState<string>('');
   const [isDisabled, setIsDisabled] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isDisabled) {
       inputRef.current?.focus();
     }
-  }, [isDisabled]);
+  }, [isDisabled, inputRef]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

@@ -4,16 +4,16 @@ import { Filters } from '../constants/filter';
 
 type Props = {
   filter: Filters;
-  onSetFilter: (filter: Filters) => void;
+  onFilterChange: (filter: Filters) => void;
 };
 
-export const Filter: React.FC<Props> = ({ filter, onSetFilter }) => (
+export const Filter: React.FC<Props> = ({ filter, onFilterChange }) => (
   <nav className="filter" data-cy="Filter">
     <a
       href="#/"
       className={cn('filter__link', { selected: filter === Filters.All })}
       data-cy="FilterLinkAll"
-      onClick={() => onSetFilter(Filters.All)}
+      onClick={() => onFilterChange(Filters.All)}
     >
       All
     </a>
@@ -22,7 +22,7 @@ export const Filter: React.FC<Props> = ({ filter, onSetFilter }) => (
       href="#/active"
       className={cn('filter__link', { selected: filter === Filters.Active })}
       data-cy="FilterLinkActive"
-      onClick={() => onSetFilter(Filters.Active)}
+      onClick={() => onFilterChange(Filters.Active)}
     >
       Active
     </a>
@@ -31,7 +31,7 @@ export const Filter: React.FC<Props> = ({ filter, onSetFilter }) => (
       href="#/completed"
       className={cn('filter__link', { selected: filter === Filters.Completed })}
       data-cy="FilterLinkCompleted"
-      onClick={() => onSetFilter(Filters.Completed)}
+      onClick={() => onFilterChange(Filters.Completed)}
     >
       Completed
     </a>

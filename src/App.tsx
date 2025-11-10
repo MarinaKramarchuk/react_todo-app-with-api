@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
 import { UserWarning } from './UserWarning';
 import {
@@ -34,7 +34,7 @@ export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [error, setError] = useState<string>('');
   const [filter, setFilter] = useState<Filters>(Filters.All);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [loadingTodoIds, setLoadingTodoIds] = useState<number[]>([]);
   const [editingTodoId, setEditingTodoId] = useState<Todo['id'] | null>(null);
@@ -48,7 +48,7 @@ export const App: React.FC = () => {
       .catch(() => {
         setError('Unable to load todos');
       })
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   }, []);
 
   useEffect(() => {
@@ -63,13 +63,10 @@ export const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, [error]);
 
-  useEffect(() => {
-    const input =
-      document.querySelector<HTMLInputElement>('.todoapp__new-todo');
+  const inputRef = useRef<HTMLInputElement>(null);
 
-    if (input) {
-      input.focus();
-    }
+  useEffect(() => {
+    inputRef.current?.focus();
   }, [todos]);
 
   if (!USER_ID) {
@@ -103,43 +100,50 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleDeleteTodo = (id: number) => {
+  const handleDeleteTodo = async (id: number) => {
     setLoadingTodoIds(prev => [...prev, id]);
 
-    deleteTodo(id)
-      .then(() => {
-        setTodos(prev => prev.filter(todo => todo.id !== id));
-      })
-      .catch(() => {
-        setError('Unable to delete a todo');
-      })
-      .finally(() =>
-        setLoadingTodoIds(prev => prev.filter(loadingId => loadingId !== id)),
-      );
+    try {
+      await deleteTodo(id);
+
+      setTodos(prev => prev.filter(todo => todo.id !== id));
+    } catch {
+      setError('Unable to delete a todo');
+    } finally {
+      setLoadingTodoIds(prev => prev.filter(loadingId => loadingId !== id));
+    }
   };
 
-  const handleDeleteCompletedTodos = () => {
+  const handleDeleteCompletedTodos = async () => {
     const idsToDelete = completedTodos.map(todo => todo.id);
+
+    if (idsToDelete.length === 0) {
+      return;
+    }
 
     setLoadingTodoIds(prev => [...prev, ...idsToDelete]);
 
-    Promise.allSettled(idsToDelete.map(id => deleteTodo(id)))
-      .then(results => {
-        const successfulIds = idsToDelete.filter(
-          (_, i) => results[i].status === 'fulfilled',
-        );
+    try {
+      const results = await Promise.allSettled(
+        idsToDelete.map(id => deleteTodo(id)),
+      );
 
-        setTodos(prev => prev.filter(todo => !successfulIds.includes(todo.id)));
+      const successfulIds = idsToDelete.filter(
+        (_, i) => results[i].status === 'fulfilled',
+      );
 
-        const hasErrors = results.some(r => r.status === 'rejected');
+      setTodos(prev => prev.filter(todo => !successfulIds.includes(todo.id)));
 
-        if (hasErrors) {
-          setError('Unable to delete a todo');
-        }
-      })
-      .finally(() => {
-        setLoadingTodoIds(prev => prev.filter(id => !idsToDelete.includes(id)));
-      });
+      const hasErrors = results.some(r => r.status === 'rejected');
+
+      if (hasErrors) {
+        setError('Unable to delete a todo');
+      }
+    } catch {
+      setError('Unexpected error while deleting todos');
+    } finally {
+      setLoadingTodoIds(prev => prev.filter(id => !idsToDelete.includes(id)));
+    }
   };
 
   const handleChangeTodoStatus = async (id: number, completed: boolean) => {
@@ -222,7 +226,7 @@ export const App: React.FC = () => {
 
       <div className="todoapp__content">
         <header className="todoapp__header">
-          {todos.length > 0 && !loading && (
+          {todos.length > 0 && !isLoading && (
             <button
               type="button"
               className={cn('todoapp__toggle-all', {
@@ -233,12 +237,16 @@ export const App: React.FC = () => {
             />
           )}
 
-          <NewTodo onSetError={setError} onAddTodo={handleAddTodo} />
+          <NewTodo
+            onSetError={setError}
+            onAddTodo={handleAddTodo}
+            inputRef={inputRef}
+          />
         </header>
 
         <TodoList
           todos={preparedTodos}
-          isLoading={loading}
+          isLoading={isLoading}
           onDeleteTodo={handleDeleteTodo}
           loadingTodoIds={loadingTodoIds}
           onChangeTodoStatus={handleChangeTodoStatus}
@@ -268,7 +276,7 @@ export const App: React.FC = () => {
               {`${activeTodos.length} items left`}
             </span>
 
-            <Filter filter={filter} onSetFilter={setFilter} />
+            <Filter filter={filter} onFilterChange={setFilter} />
             <button
               type="button"
               className="todoapp__clear-completed"
