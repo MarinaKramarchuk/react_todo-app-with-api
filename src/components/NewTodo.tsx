@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 type Props = {
   onSetError: (arg: string) => void;
-  onAddTodo: (title: string) => void;
+  onAddTodo: (title: string) => Promise<void>;
   inputRef: React.RefObject<HTMLInputElement>;
 };
 

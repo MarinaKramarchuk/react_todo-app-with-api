@@ -5,13 +5,13 @@ type Props = {
   todos: Todo[];
   isLoading: boolean;
   isEditing: Todo['id'] | null;
-  onDeleteTodo: (id: Todo['id']) => void;
+  onDeleteTodo: (id: Todo['id']) => Promise<void>;
   loadingTodoIds: number[];
-  onChangeTodoStatus: (id: Todo['id'], completed: boolean) => void;
+  onChangeTodoStatus: (id: Todo['id'], completed: boolean) => Promise<void>;
   onSetIsEditing: (todo: Todo | null) => void;
   query: string;
   onSetQuery: (value: string) => void;
-  onUpdateTodo: (id: Todo['id'], query: string) => void;
+  onUpdateTodo: (id: Todo['id'], query: string) => Promise<void>;
 };
 
 export const TodoList: React.FC<Props> = ({

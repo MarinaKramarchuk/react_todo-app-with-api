@@ -5,12 +5,12 @@ type Props = {
   todo: Todo;
   isEditing?: boolean;
   isLoading?: boolean;
-  onDeleteTodo: (id: Todo['id']) => void;
-  onChangeTodoStatus: (id: Todo['id'], completed: boolean) => void;
+  onDeleteTodo: (id: Todo['id']) => Promise<void>;
+  onChangeTodoStatus: (id: Todo['id'], completed: boolean) => Promise<void>;
   onSetIsEditing: (todo: Todo | null) => void;
   query: string;
   onSetQuery: (value: string) => void;
-  onUpdateTodo: (id: Todo['id'], query: string) => void;
+  onUpdateTodo: (id: Todo['id'], query: string) => Promise<void>;
 };
 
 export const TodoComp: React.FC<Props> = ({
