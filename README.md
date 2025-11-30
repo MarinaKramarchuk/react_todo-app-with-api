@@ -1,50 +1,74 @@
-# React Todo App with API (complete)
+# React Todo App with API
 
-It is the third part of the React Todo App with API.
+A full-featured Todo application built with **React** and **TypeScript**, fully synchronized with a remote API.  
+The app allows users to create, rename, toggle, and delete todos, manage all items at once, and interact with the UI through smooth loading states and error handling.
 
-Take your code implemented for [Add and Delete](https://github.com/mate-academy/react_todo-app-add-and-delete)
-and implement the ability to toggle and rename todos.
+🔗 **Demo:** https://MarinaKramarchuk.github.io/react_todo-app-with-api/  
+💻 **GitHub Code:** https://github.com/MarinaKramarchuk/react_todo-app-with-api
 
-> Here is [the working example](https://mate-academy.github.io/react_todo-app-with-api/)
+---
 
-## Toggling a todo status
+## Features
 
-Toggle the `completed` status on `TodoStatus` change:
-- Install Prettier Extention and use this [VSCode settings](https://mate-academy.github.io/fe-program/tools/vscode/settings.json) to enable format on save.
-- covered the todo with a loader overlay while waiting for API response;
-- the status should be changed on success;
-- show the `Unable to update a todo` notification in case of API error.
+### ✅ Create todos
+- Add new tasks with API synchronization  
+- Show a loader overlay during requests  
+- Display error notifications in case of failed requests  
 
-Add the ability to toggle the completed status of all the todos with the `toggleAll` checkbox:
+### ✅ Toggle todo status
+- Mark a task as completed or active  
+- Apply a loader on the updated todo  
+- Update the UI only after API success  
+- Show `Unable to update a todo` on failure  
 
-- `toggleAll` button should have `active` class only if all the todos are completed;
-- `toggleAll` click changes its status to the opposite one, and sets this new status to all the todos;
-- it should work the same as several individual updates of the todos which statuses were actually changed;
-- don't send requests for the todos that were not changed;
+### ✅ Toggle all todos
+- "Toggle all" checkbox marks **all** todos completed or active  
+- Has `active` class only when all tasks are completed  
+- Sends requests only for todos whose status has changed  
+- Behaves the same as multiple individual updates  
 
-## Renaming a todo
+### ✅ Rename todos
+- Double-click to edit a todo title  
+- Save changes with **Enter** or on input **blur**  
+- Cancel editing with **Esc**  
+- Delete the todo if the new title is empty  
+- Show loader while updating  
+- Display error messages for update/delete failures  
 
-Implement the ability to edit a todo title on double click:
+### ✅ Delete todos
+- Remove single items with API request  
+- Show loader during deletion  
+- Notification on API errors  
 
-- show the edit form instead of the title and remove button;
-- saves changes on the form submit (just press `Enter`);
-- save changes when the field loses focus (`onBlur`);
-- if the new title is the same as the old one just cancel editing;
-- cancel editing on `Esс` key `keyup` event;
-- if the new title is empty delete the todo the same way the `x` button does it;
-- if the title was changed show the loader while waiting for the API response;
-- update the todo title on success;
-- show `Unable to update a todo` in case of API error;
-- or the deletion error message if we tried to delete the todo.
+### Optional UI Features (if implemented)
+- Filters: All / Active / Completed  
+- Active items counter  
+- Clear completed button  
 
-## If you want to enable tests
-- open `cypress/integration/page.spec.js`
-- replace `describe.skip` with `describe` for the root `describe`
+---
 
-> ❗❗All tests should pass, even if some behaviour is not well explained in the task❗❗
+## Tech Stack
 
-## Instructions
+- **React**
+- **TypeScript**
+- **JavaScript (ES6+)**
+- **CSS / SASS**
+- **BEM Methodology**
+- **REST API**
 
-- Implement a solution following the [React task guideline](https://github.com/mate-academy/react_task-guideline#react-tasks-guideline).
-- Use the [React TypeScript cheat sheet](https://mate-academy.github.io/fe-program/js/extra/react-typescript).
-- Replace `<your_account>` with your Github username in the [DEMO LINK](https://<your_account>.github.io/react_todo-app-with-api/) and add it to the PR description.
+---
+
+## Installation & Setup
+
+### 🔧 Requirements
+- Node.js (LTS recommended)  
+- npm or yarn  
+
+### 📦 Install
+
+```bash
+git clone https://github.com/your_account/react_todo-app-with-api.git
+cd react_todo-app-with-api
+npm install
+
+
